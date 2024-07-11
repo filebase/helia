@@ -4,215 +4,114 @@
   </a>
 </p>
 
+# @helia/car
+
 [![ipfs.tech](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](https://ipfs.tech)
 [![Discuss](https://img.shields.io/discourse/https/discuss.ipfs.tech/posts.svg?style=flat-square)](https://discuss.ipfs.tech)
 [![codecov](https://img.shields.io/codecov/c/github/ipfs/helia.svg?style=flat-square)](https://codecov.io/gh/ipfs/helia)
 [![CI](https://img.shields.io/github/actions/workflow/status/ipfs/helia/main.yml?branch=main\&style=flat-square)](https://github.com/ipfs/helia/actions/workflows/main.yml?query=branch%3Amain)
 
-[Helia](https://github.com/ipfs/helia) is a lean, modular, and modern TypeScript implementation of IPFS for the prolific JS and browser environments.
+> Import/export car files from Helia
 
-See the [Manifesto](https://github.com/ipfs/helia/wiki/Manifesto), the [FAQ](https://github.com/ipfs/helia/wiki/FAQ), and the [State of IPFS in JS blog post from October 2022](https://blog.ipfs.tech/state-of-ipfs-in-js/) for more info.
+# About
 
-# 🌟 Usage
+<!--
 
-A quick overview of how to get different types of data in and out of your Helia
-node.
+!IMPORTANT!
 
-## 🪢 Strings
+Everything in this README between "# About" and "# Install" is automatically
+generated and will be overwritten the next time the doc generator is run.
 
-You can use the [@helia/strings](https://www.npmjs.com/package/@helia/strings)
-module to easily add and get strings from your Helia node:
+To make changes to this section, please update the @packageDocumentation section
+of src/index.js or src/index.ts
 
-```js
+To experiment with formatting, please run "npm run docs" from the root of this
+repo and examine the changes made.
+
+-->
+
+`@helia/car` provides `import` and `export` methods to read/write Car files to Helia's blockstore.
+
+See the Car interface for all available operations.
+
+By default it supports `dag-pb`, `dag-cbor`, `dag-json` and `raw` CIDs, more esoteric DAG walkers can be passed as an init option.
+
+## Example - Exporting a DAG as a CAR file
+
+```typescript
 import { createHelia } from 'helia'
-import { strings } from '@helia/strings'
+import { unixfs } from '@helia/unixfs'
+import { car } from '@helia/car'
+import { CarWriter } from '@ipld/car'
+import { Readable } from 'node:stream'
+import nodeFs from 'node:fs'
 
-const helia = await createHelia()
-const s = strings(helia)
+const helia = createHelia({
+  // ... helia config
+})
+const fs = unixfs(helia)
 
-const myImmutableAddress = await s.add('hello world')
+// add some UnixFS data
+const cid = await fs.addBytes(fileData1)
 
-console.log(await s.get(myImmutableAddress))
-// hello world
+// export it as a Car
+const c = car(helia)
+const { writer, out } = await CarWriter.create(cid)
+
+// `out` needs to be directed somewhere, see the @ipld/car docs for more information
+Readable.from(out).pipe(nodeFs.createWriteStream('example.car'))
+
+// write the DAG behind `cid` into the writer
+await c.export(cid, writer)
 ```
 
-## 🌃 JSON
+## Example - Importing all blocks from a CAR file
 
-The [@helia/json](https://www.npmjs.com/package/@helia/json) module lets you add
-or get plain JS objects:
-
-```js
+```typescript
 import { createHelia } from 'helia'
-import { json } from '@helia/json'
+import { unixfs } from '@helia/unixfs'
+import { car } from '@helia/car'
+import { CarReader } from '@ipld/car'
+import { Readable } from 'node:stream'
+import nodeFs from 'node:fs'
 
-const helia = await createHelia()
-const j = json(helia)
+const helia = createHelia({
+  // ... helia config
+})
 
-const myImmutableAddress = await j.add({ hello: 'world' })
+// import the car
+const inStream = nodeFs.createReadStream('example.car')
+const reader = await CarReader.fromIterable(inStream)
 
-console.log(await j.get(myImmutableAddress))
-// { hello: 'world' }
+await c.import(reader)
 ```
 
-## 🌠 DAG-JSON
+# Install
 
-The [@helia/dag-json](https://www.npmjs.com/package/@helia/dag-json) allows you
-to store references to linked objects as
-[CIDs](https://docs.ipfs.tech/concepts/content-addressing):
-
-```js
-import { createHelia } from 'helia'
-import { dagJson } from '@helia/dag-json'
-
-const helia = await createHelia()
-const d = dagJson(helia)
-
-const object1 = { hello: 'world' }
-const myImmutableAddress1 = await d.add(object1)
-
-const object2 = { link: myImmutableAddress1 }
-const myImmutableAddress2 = await d.add(object2)
-
-const retrievedObject = await d.get(myImmutableAddress2)
-console.log(retrievedObject)
-// { link: CID(baguqeerasor...) }
-
-console.log(await d.get(retrievedObject.link))
-// { hello: 'world' }
+```console
+$ npm i @helia/car
 ```
 
-## 🌌 DAG-CBOR
+## Browser `<script>` tag
 
-[@helia/dag-cbor](https://www.npmjs.com/package/@helia/dag-cbor) works in a
-similar way to `@helia/dag-json` but stores objects using
-[Concise Binary Object Representation](https://cbor.io/):
+Loading this module through a script tag will make it's exports available as `HeliaCar` in the global namespace.
 
-```js
-import { createHelia } from 'helia'
-import { dagCbor } from '@helia/dag-cbor'
-
-const helia = await createHelia()
-const d = dagCbor(helia)
-
-const object1 = { hello: 'world' }
-const myImmutableAddress1 = await d.add(object1)
-
-const object2 = { link: myImmutableAddress1 }
-const myImmutableAddress2 = await d.add(object2)
-
-const retrievedObject = await d.get(myImmutableAddress2)
-console.log(retrievedObject)
-// { link: CID(baguqeerasor...) }
-
-console.log(await d.get(retrievedObject.link))
-// { hello: 'world' }
+```html
+<script src="https://unpkg.com/@helia/car/dist/index.min.js"></script>
 ```
 
-# 🐾 Next steps
+# API Docs
 
-Check out the [helia-examples](https://github.com/ipfs-examples/helia-examples)
-repo for how to do mostly anything with your Helia node.
+- <https://ipfs.github.io/helia/modules/_helia_car.html>
 
-# 🏃‍♀️ Getting Started
+# License
 
-Check out the [Helia examples repo](https://github.com/ipfs-examples/helia-examples#examples), which covers a wide variety of use cases. If you feel something has been missed, follow the [contribution guide](https://github.com/ipfs-examples/helia-examples#contributing) and create a PR to the examples repo.
+Licensed under either of
 
-# 📗 Project Docs
+- Apache 2.0, ([LICENSE-APACHE](LICENSE-APACHE) / <http://www.apache.org/licenses/LICENSE-2.0>)
+- MIT ([LICENSE-MIT](LICENSE-MIT) / <http://opensource.org/licenses/MIT>)
 
-- See the [project wiki](https://github.com/ipfs/helia/wiki).
-
-# 📒 API Docs
-
-- https://ipfs.github.io/helia
-
-# 📐 System diagram
-
-```mermaid
-graph TD;
-    User["User or application"]-->IPNS["@helia/ipns"];
-    User-->UnixFS["@helia/unixfs"];
-    User-->Libp2p;
-    User-->Datastore;
-    User-->Blockstore;
-    UnixFS-->Blockstore;
-    IPNS-->Datastore;
-    subgraph helia [Helia]
-      Datastore
-      Blockstore-->BlockBrokers;
-      BlockBrokers-->Bitswap;
-      BlockBrokers-->TrustlessGateways;
-      Libp2p-->DHT;
-      Libp2p-->PubSub;
-      Libp2p-->IPNI;
-      Libp2p-->Reframe;
-    end
-    Blockstore-->BlockStorage["File system/IDB/S3/etc"];
-    Datastore-->DataStorage["Level/S3/IDB/etc"];
-    Bitswap-->Network;
-    TrustlessGateways-->Gateway1;
-    TrustlessGateways-->GatewayN;
-    DHT-->Network;
-    PubSub-->Network;
-    IPNI-->Network;
-    Reframe-->Network;
-```
-
-# 🏭 Code Structure
-
-Helia embraces a modular approach and encourages users to bring their own implementations of various APIs to suit their needs.
-
-The basic Helia API is defined in:
-
-- [`/packages/interface`](./packages/interface) The Helia API
-
-The API is implemented by:
-
-- [`/packages/helia`](./packages/helia) An peer to peer implementation that uses [bitswap](https://docs.ipfs.tech/concepts/bitswap/), [libp2p](https://www.npmjs.com/package/libp2p) and [HTTP gateways](https://docs.ipfs.tech/reference/http/gateway/) as fallback
-- [`/packages/http`](./packages/http) A lightweight implementation that uses [HTTP gateways](https://docs.ipfs.tech/reference/http/gateway/) exclusively
-
-Helia also ships a number of supplemental libraries and tools that can be combined with Helia API implementations to accomplish tasks in distributed and trustless ways.
-
-These libraries are not intended to be the "one true implementation" of any given API, but are made available for users to include depending on the need of their particular application:
-
-- [./packages/car](./packages/car) The `@helia/car` module
-- [./packages/dag-cbor](./packages/dag-cbor) The `@helia/dag-cbor` module
-- [./packages/dag-json](./packages/dag-json) The `@helia/dag-json` module
-- [./packages/ipns](./packages/ipns) The `@helia/ipns` module
-- [./packages/json](./packages/json) The `@helia/json` module
-- [./packages/mfs](./packages/mfs) The `@helia/mfs` module
-- [./packages/strings](./packages/strings) The `@helia/strings` module
-- [./packages/unixfs](./packages/unixfs) The `@helia/unixfs` module
-
-An interop suite ensures everything is compatible:
-
-- [`/packages/interop`](./packages/interop) Interop tests for Helia
-
-## Other modules
-
-There are several other modules available outside this repo:
-
-- [`@helia/verified-fetch`](https://github.com/ipfs/helia-verified-fetch) A [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)-like API for retrieving trustless, verified content from the distributed web
-- [`@helia/delegated-routing-v1-http-api`](https://github.com/ipfs/helia-delegated-routing-v1-http-api) An implementation of the [Delegated Routing v1 HTTP API](https://specs.ipfs.tech/routing/http-routing-v1/) including a server and a client
-- [Helia WNFS](https://github.com/shovelers/helia-wnfs) a [WNFS](https://guide.fission.codes/developers/webnative/file-system-wnfs) implementation built on top of Helia
-- [`@helia/remote-pinning`](https://github.com/ipfs/helia-remote-pinning) A Helia client for communicating with [IPFS Pinning Services](https://ipfs.github.io/pinning-services-api-spec/)
-- [`@helia/http-gateway`](https://github.com/ipfs/helia-http-gateway) An implentation of the [IPFS HTTP Gateway API](https://docs.ipfs.tech/concepts/ipfs-gateway/#gateway-types) built with Helia
-
-# 📣 Project status
-
-Helia v1 shipped in 202303 (see [releases](https://github.com/ipfs/helia/releases)), and development keeps on trucking as we work on initiatives in the [roadmap](#roadmap) and make performance improvements and bug fixes along the way.
-
-# 🛣️ Roadmap
-
-Please find and comment on [the Roadmap here](https://github.com/ipfs/helia/issues/5).
-
-# 👫 Get involved
-
-- Watch our Helia Demo Day presentations [here](https://www.youtube.com/playlist?list=PLuhRWgmPaHtQAnt8INOe5-kV9TLVaUJ9v)
-- We are sharing about the progress at periodic [Helia Demos](https://lu.ma/helia).  This is a good place to find out the latest and learn of ways to get involved.  We'd love to see you there!
-- Pick up one of the [issues](https://github.com/ipfs/helia/issues).
-- Come chat in Filecoin Slack #ip-js.  (Yes, we should bridge this to other chat environments.  Please comment [here](https://github.com/ipfs/helia/issues/33) if you'd like this.)
-
-# 🤲 Contribute
+# Contribute
 
 Contributions welcome! Please check out [the issues](https://github.com/ipfs/helia/issues).
 
@@ -223,18 +122,3 @@ Please be aware that all interactions related to this repo are subject to the IP
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
 
 [![](https://cdn.rawgit.com/jbenet/contribute-ipfs-gif/master/img/contribute.gif)](https://github.com/ipfs/community/blob/master/CONTRIBUTING.md)
-
-# 🛍️ Notable Consumers/Users
-
-- See [Projects using Helia](https://github.com/ipfs/helia/wiki/Projects-using-Helia).
-
-# 🌞 Branding
-
-- See [Branding](https://github.com/ipfs/helia/wiki/Branding).
-
-# 🪪 License
-
-Licensed under either of
-
-- Apache 2.0, ([LICENSE-APACHE](LICENSE-APACHE) / <http://www.apache.org/licenses/LICENSE-2.0>)
-- MIT ([LICENSE-MIT](LICENSE-MIT) / <http://opensource.org/licenses/MIT>)

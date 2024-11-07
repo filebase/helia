@@ -12,6 +12,7 @@ import type { WantType } from './pb/message.js'
 import type { BlockBroker, CreateSessionOptions } from '@helia/interface'
 import type { Routing } from '@helia/interface/routing'
 import type { Libp2p, AbortOptions, Startable, ComponentLogger, Metrics, PeerId } from '@libp2p/interface'
+import type { EventEmitter } from 'events'
 import type { Blockstore } from 'interface-blockstore'
 import type { CID } from 'multiformats/cid'
 import type { MultihashHasher } from 'multiformats/hashes/interface'
@@ -80,6 +81,11 @@ export interface BitswapComponents {
 }
 
 export interface BitswapOptions {
+  /**
+   * This is the event emitter allowing users to track blocks sent
+   */
+  events?: EventEmitter
+
   /**
    * This is the maximum number of concurrent inbound bitswap streams that are
    * allowed

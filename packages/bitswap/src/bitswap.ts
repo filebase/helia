@@ -1,4 +1,5 @@
 /* eslint-disable no-loop-func */
+import { EventEmitter } from 'events'
 import { setMaxListeners } from '@libp2p/interface'
 import { anySignal } from 'any-signal'
 import { Network } from './network.js'
@@ -11,6 +12,7 @@ import type { BlockBroker, CreateSessionOptions } from '@helia/interface'
 import type { ComponentLogger, PeerId } from '@libp2p/interface'
 import type { Logger } from '@libp2p/logger'
 import type { AbortOptions } from '@multiformats/multiaddr'
+import type { EventEmitter as EventEmitterType } from 'events'
 import type { Blockstore } from 'interface-blockstore'
 import type { CID } from 'multiformats/cid'
 import type { ProgressOptions } from 'progress-events'
@@ -37,11 +39,15 @@ export class Bitswap implements BitswapInterface {
   public blockstore: Blockstore
   public peerWantLists: PeerWantLists
   public wantList: WantList
+  public readonly events: EventEmitterType | undefined
 
   constructor (components: BitswapComponents, init: BitswapOptions = {}) {
     this.logger = components.logger
     this.log = components.logger.forComponent('helia:bitswap')
     this.blockstore = components.blockstore
+
+    // create an event emitter
+    init.events = init.events ?? new EventEmitter()
 
     // report stats to libp2p metrics
     this.stats = new Stats(components)

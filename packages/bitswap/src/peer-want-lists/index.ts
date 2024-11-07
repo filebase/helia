@@ -8,11 +8,13 @@ import type { Network } from '../network.js'
 import type { BitswapMessage } from '../pb/message.js'
 import type { ComponentLogger, Libp2p, Logger, Metrics, PeerId } from '@libp2p/interface'
 import type { PeerMap } from '@libp2p/peer-collections'
+import type { EventEmitter } from 'events'
 import type { Blockstore } from 'interface-blockstore'
 import type { AbortOptions } from 'it-length-prefixed-stream'
 import type { ProgressOptions } from 'progress-events'
 
 export interface PeerWantListsInit {
+  events?: EventEmitter | undefined
   maxSizeReplaceHasWithBlock?: number
 }
 
@@ -39,6 +41,7 @@ export class PeerWantLists {
   private readonly maxSizeReplaceHasWithBlock?: number
   private readonly log: Logger
   private readonly logger: ComponentLogger
+  private readonly events: EventEmitter | undefined
 
   constructor (components: PeerWantListsComponents, init: PeerWantListsInit = {}) {
     this.blockstore = components.blockstore
@@ -46,6 +49,8 @@ export class PeerWantLists {
     this.maxSizeReplaceHasWithBlock = init.maxSizeReplaceHasWithBlock
     this.log = components.logger.forComponent('helia:bitswap:peer-want-lists')
     this.logger = components.logger
+
+    this.events = init.events
 
     this.ledgerMap = trackedPeerMap({
       name: 'helia_bitswap_ledger_map',
@@ -106,6 +111,7 @@ export class PeerWantLists {
         network: this.network,
         logger: this.logger
       }, {
+        events: this.events,
         maxSizeReplaceHasWithBlock: this.maxSizeReplaceHasWithBlock
       })
       this.ledgerMap.set(peerId, ledger)

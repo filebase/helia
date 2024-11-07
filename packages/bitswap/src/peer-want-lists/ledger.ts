@@ -5,6 +5,7 @@ import { QueuedBitswapMessage } from '../utils/bitswap-message.js'
 import { cidToPrefix } from '../utils/cid-prefix.js'
 import type { Network } from '../network.js'
 import type { ComponentLogger, Logger, PeerId } from '@libp2p/interface'
+import type { EventEmitter } from 'events'
 import type { Blockstore } from 'interface-blockstore'
 import type { AbortOptions } from 'it-length-prefixed-stream'
 import type { CID } from 'multiformats/cid'
@@ -17,6 +18,7 @@ export interface LedgerComponents {
 }
 
 export interface LedgerInit {
+  events: EventEmitter | undefined
   maxSizeReplaceHasWithBlock?: number
 }
 
@@ -59,6 +61,7 @@ export class Ledger {
   public lastExchange?: number
   private readonly maxSizeReplaceHasWithBlock: number
   private readonly log: Logger
+  private readonly events: EventEmitter | undefined
 
   constructor (components: LedgerComponents, init: LedgerInit) {
     this.peerId = components.peerId
@@ -71,6 +74,7 @@ export class Ledger {
     this.bytesSent = 0
     this.bytesReceived = 0
     this.maxSizeReplaceHasWithBlock = init.maxSizeReplaceHasWithBlock ?? DEFAULT_MAX_SIZE_REPLACE_HAS_WITH_BLOCK
+    this.events = init.events
   }
 
   sentBytes (n: number): void {
@@ -92,6 +96,7 @@ export class Ledger {
   public async sendBlocksToPeer (options?: AbortOptions): Promise<void> {
     const message = new QueuedBitswapMessage()
     const sentBlocks = new Set<string>()
+    const sentLogs = []
 
     for (const [key, entry] of this.wants.entries()) {
       try {
@@ -106,6 +111,12 @@ export class Ledger {
             message.addBlock(entry.cid, {
               data: block,
               prefix: cidToPrefix(entry.cid)
+            })
+            sentLogs.push({
+              peerId: this.peerId,
+              cid: entry.cid,
+              size: block.byteLength,
+              timestamp: Date.now()
             })
           } else {
             this.log('sending have for %c', entry.cid)
@@ -122,6 +133,12 @@ export class Ledger {
           message.addBlock(entry.cid, {
             data: block,
             prefix: cidToPrefix(entry.cid)
+          })
+          sentLogs.push({
+            peerId: this.peerId,
+            cid: entry.cid,
+            size: block.byteLength,
+            timestamp: Date.now()
           })
         }
       } catch (err: any) {
@@ -155,6 +172,11 @@ export class Ledger {
       this.log('sending message')
       await this.network.sendMessage(this.peerId, message, options)
       this.log('sent message')
+
+      // persist sent logs for this message
+      for (const sentLog of sentLogs) {
+        if (this.events != null) this.events.emit('helia:bitswap:ledger:sendBlockToPeer', sentLog)
+      }
 
       // update accounting
       this.sentBytes([...message.blocks.values()].reduce((acc, curr) => acc + curr.data.byteLength, 0))

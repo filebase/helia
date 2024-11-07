@@ -1,5 +1,49 @@
 # Changelog
 
+## [3.0.0](https://github.com/filebase/helia/compare/bitswap-v2.0.1...bitswap-v3.0.0) (2024-11-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* helia now uses libp2p@2.x.x
+
+### Features
+
+* add @helia/bitswap with sessions ([#409](https://github.com/filebase/helia/issues/409)) ([e582c63](https://github.com/filebase/helia/commit/e582c63ca296c789312f5fcf5e3e18f267f74c03))
+* add metrics property to helia interface ([#512](https://github.com/filebase/helia/issues/512)) ([f7f71bb](https://github.com/filebase/helia/commit/f7f71bb20ab0b4efbe802be5af1189e76153b826))
+
+
+### Bug Fixes
+
+* add doc-check script and export types used by functions ([#637](https://github.com/filebase/helia/issues/637)) ([4f14996](https://github.com/filebase/helia/commit/4f14996a9b976f2b60f4c8fe52a4fd1632420749))
+* define max bitswap message sizes ([#510](https://github.com/filebase/helia/issues/510)) ([58d7ddf](https://github.com/filebase/helia/commit/58d7ddf19cd965a8a5cc1d8148fa073a6b44d8ae))
+* improve bitswap message merging ([#522](https://github.com/filebase/helia/issues/522)) ([7419dfc](https://github.com/filebase/helia/commit/7419dfc2fe273d3f816d27b62062636be0964d7a))
+* improve sessions implementation ([#495](https://github.com/filebase/helia/issues/495)) ([9ea934e](https://github.com/filebase/helia/commit/9ea934ed7208e87c28bc65e9090bdedf66ceeffd))
+* increase default listers on abort signals ([#484](https://github.com/filebase/helia/issues/484)) ([7cd012a](https://github.com/filebase/helia/commit/7cd012aa2ba568845d49d63a71806d20f6ac678f))
+* remove @libp2p/interfaces dep ([#591](https://github.com/filebase/helia/issues/591)) ([e567717](https://github.com/filebase/helia/commit/e567717102464a925f87cb10fc05808a50be960e))
+* remove wants from wantlist when multiple block retrievers are used ([#491](https://github.com/filebase/helia/issues/491)) ([b1c761d](https://github.com/filebase/helia/commit/b1c761db6db7a7aca3044263fdd5e8967204deeb))
+* split bitswap messages ([#507](https://github.com/filebase/helia/issues/507)) ([59de059](https://github.com/filebase/helia/commit/59de0599367c828998069ac37dc93e10ddb565a1))
+* update deps and fix types ([#572](https://github.com/filebase/helia/issues/572)) ([f16c9ea](https://github.com/filebase/helia/commit/f16c9eac32677333313c433eb918b705439c0819))
+* update to libp2p@2.x.x ([#630](https://github.com/filebase/helia/issues/630)) ([ec8bf66](https://github.com/filebase/helia/commit/ec8bf66dd870b42d6e5ef2b41706102397e0d39a))
+
+
+### Documentation
+
+* fix grammar - it's -&gt; its ([#565](https://github.com/filebase/helia/issues/565)) ([155e24d](https://github.com/filebase/helia/commit/155e24db8c06c33972895d702a656e0c2996f3d9))
+
+
+### Dependencies
+
+* bump aegir from 42.2.11 to 43.0.1 ([#552](https://github.com/filebase/helia/issues/552)) ([74ccc92](https://github.com/filebase/helia/commit/74ccc92793a6d0bb4bee714d9fe4fa4183aa4ee8))
+* bump aegir from 43.0.3 to 44.0.1 ([#569](https://github.com/filebase/helia/issues/569)) ([6952f05](https://github.com/filebase/helia/commit/6952f05357844e5aa3dffb2afaf261df06b9b7c1))
+* bump aegir from 44.1.4 to 45.0.1 ([#669](https://github.com/filebase/helia/issues/669)) ([e58e49c](https://github.com/filebase/helia/commit/e58e49c6aed8ea9d1e9851435a25e33fdbee3781))
+* **dev:** bump sinon from 17.0.2 to 18.0.0 ([#536](https://github.com/filebase/helia/issues/536)) ([62f77df](https://github.com/filebase/helia/commit/62f77dfbff94a64e9c248f5be54055c18a6427f7))
+* **dev:** bump sinon from 18.0.1 to 19.0.2 ([#634](https://github.com/filebase/helia/issues/634)) ([23e62e1](https://github.com/filebase/helia/commit/23e62e16b8962bfe982a1bbb157a144382ca7099))
+* The following workspace dependencies were updated
+  * dependencies
+    * @helia/interface bumped from ^5.0.0 to ^6.0.0
+    * @helia/utils bumped from ^1.0.1 to ^2.0.0
+
 ## [2.0.1](https://github.com/ipfs/helia/compare/bitswap-v2.0.0...bitswap-v2.0.1) (2024-10-23)
 
 

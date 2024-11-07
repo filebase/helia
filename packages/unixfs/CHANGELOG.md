@@ -1,5 +1,58 @@
 # Changelog
 
+## [5.0.0](https://github.com/filebase/helia/compare/unixfs-v4.0.0...unixfs-v5.0.0) (2024-11-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* helia now uses libp2p@2.x.x
+* the `libp2p` property has been removed from the `Helia` interface in `@helia/interface` - it is still present on the return type of `createHelia` from the `helia` module
+* uses multiformats v13 and helia v3
+
+### Features
+
+* add @helia/http to monorepo ([#372](https://github.com/filebase/helia/issues/372)) ([76220cd](https://github.com/filebase/helia/commit/76220cd5adf45af7fa61fd0a1321de4722b744d6))
+* add globSource and urlSource ([#53](https://github.com/filebase/helia/issues/53)) ([b490a6e](https://github.com/filebase/helia/commit/b490a6e35cb521c0c29d0f1382fc2e4b3b662b9c))
+* add offline option to all operations ([#51](https://github.com/filebase/helia/issues/51)) ([444c8bd](https://github.com/filebase/helia/commit/444c8bd0dd40d8cad7ca12f3fbffaaf19f8e75fc))
+* update helia to v3 and multiformats to v13 ([#147](https://github.com/filebase/helia/issues/147)) ([001247c](https://github.com/filebase/helia/commit/001247c6fc38ff3d810736371de901e5e1099f26))
+
+
+### Bug Fixes
+
+* add doc-check script and export types used by functions ([#637](https://github.com/filebase/helia/issues/637)) ([4f14996](https://github.com/filebase/helia/commit/4f14996a9b976f2b60f4c8fe52a4fd1632420749))
+* Add GlobSourceResult to globSource return type in unixfs. ([#475](https://github.com/filebase/helia/issues/475)) ([9ac5909](https://github.com/filebase/helia/commit/9ac59098d3e4c8644756a83b185308d7d91626c1))
+* add sideEffects: false to package.json ([#485](https://github.com/filebase/helia/issues/485)) ([8c45267](https://github.com/filebase/helia/commit/8c45267a474ab10b2faadfebdab33cfe446e8c03))
+* convert date to mtime in glob source ([#106](https://github.com/filebase/helia/issues/106)) ([cd9e903](https://github.com/filebase/helia/commit/cd9e903c2ccac61372eaa64a61b4a8f3d79f9d4a))
+* correct browser override path for glob-source ([#60](https://github.com/filebase/helia/issues/60)) ([fd0f33b](https://github.com/filebase/helia/commit/fd0f33b2a66e2840b5a03f27a48240b3c5d2b67e))
+* export unixfs errors ([#50](https://github.com/filebase/helia/issues/50)) ([8426d65](https://github.com/filebase/helia/commit/8426d650ae4645b7b975331c5fd02f56e390cab6))
+* relax unixfs blockstore input type ([#509](https://github.com/filebase/helia/issues/509)) ([5d62dfb](https://github.com/filebase/helia/commit/5d62dfb3dd520e6d557b273e446e63b76f57144e))
+* support reading identity cids ([#429](https://github.com/filebase/helia/issues/429)) ([98308f7](https://github.com/filebase/helia/commit/98308f77488b8196b2d18f78f05ecd2d37456834))
+* update project deps and docs ([77e34fc](https://github.com/filebase/helia/commit/77e34fc115cbfb82585fd954bcf389ecebf655bc))
+* update to libp2p@2.x.x ([#630](https://github.com/filebase/helia/issues/630)) ([ec8bf66](https://github.com/filebase/helia/commit/ec8bf66dd870b42d6e5ef2b41706102397e0d39a))
+* use blockstore interface where possible ([#417](https://github.com/filebase/helia/issues/417)) ([30c8981](https://github.com/filebase/helia/commit/30c8981934ffba72d572a7b8b2712ec93b7f4d31))
+* use unixfs exporter to traverse DAGs ([#455](https://github.com/filebase/helia/issues/455)) ([6f8c15b](https://github.com/filebase/helia/commit/6f8c15b769c08bf73e7c62dab79909b5ecfc3c93))
+
+
+### Documentation
+
+* fix grammar - it's -&gt; its ([#565](https://github.com/filebase/helia/issues/565)) ([155e24d](https://github.com/filebase/helia/commit/155e24db8c06c33972895d702a656e0c2996f3d9))
+* fix typos in example code ([#57](https://github.com/filebase/helia/issues/57)) ([b7625c3](https://github.com/filebase/helia/commit/b7625c3426380e63052968b1476e2d689c9213de))
+
+
+### Dependencies
+
+* bump @helia/interface from 1.2.2 to 2.0.0 ([#87](https://github.com/filebase/helia/issues/87)) ([098a305](https://github.com/filebase/helia/commit/098a305241024ed3903b686892ded8abfca55f5f))
+* bump aegir from 42.2.11 to 43.0.1 ([#552](https://github.com/filebase/helia/issues/552)) ([74ccc92](https://github.com/filebase/helia/commit/74ccc92793a6d0bb4bee714d9fe4fa4183aa4ee8))
+* bump aegir from 43.0.3 to 44.0.1 ([#569](https://github.com/filebase/helia/issues/569)) ([6952f05](https://github.com/filebase/helia/commit/6952f05357844e5aa3dffb2afaf261df06b9b7c1))
+* bump aegir from 44.1.4 to 45.0.1 ([#669](https://github.com/filebase/helia/issues/669)) ([e58e49c](https://github.com/filebase/helia/commit/e58e49c6aed8ea9d1e9851435a25e33fdbee3781))
+* **dev:** bump aegir from 40.0.13 to 41.0.0 ([#105](https://github.com/filebase/helia/issues/105)) ([2421ee2](https://github.com/filebase/helia/commit/2421ee2b4440446160e1a665bc5ecfc92d2b64de))
+* update all deps and fix linting ([d4d6515](https://github.com/filebase/helia/commit/d4d6515f023db339874d34871e69fb7c3fc47f6c))
+* update it-glob ([#520](https://github.com/filebase/helia/issues/520)) ([36081e0](https://github.com/filebase/helia/commit/36081e063972e89c0c7b258aeb220e60bf024249))
+* update libp2p patch versions ([917a1bc](https://github.com/filebase/helia/commit/917a1bceb9e9b56428a15dc3377a963f06affd12))
+* The following workspace dependencies were updated
+  * dependencies
+    * @helia/interface bumped from ^5.0.0 to ^6.0.0
+
 ## [4.0.0](https://github.com/ipfs/helia/compare/unixfs-v3.0.7...unixfs-v4.0.0) (2024-10-07)
 
 

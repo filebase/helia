@@ -1,0 +1,1 @@
+{"version":3,"file":"connect.d.ts","sourceRoot":"","sources":["../../../src/fixtures/connect.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,OAAO,CAAA;AACxC,OAAO,KAAK,EAAE,QAAQ,EAAE,MAAM,WAAW,CAAA;AAEzC;;GAEG;AACH,wBAAsB,OAAO,CAAE,KAAK,EAAE,WAAW,CAAC,GAAG,CAAC,EAAE,IAAI,EAAE,QAAQ,EAAE,QAAQ,EAAE,MAAM,GAAG,OAAO,CAAC,IAAI,CAAC,CAavG"}

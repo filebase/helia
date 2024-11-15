@@ -1,0 +1,1 @@
+{"version":3,"file":"create-helia-http.js","sourceRoot":"","sources":["../../../src/fixtures/create-helia-http.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,IAAI,WAAW,EAAsB,MAAM,aAAa,CAAA;AAGhF,MAAM,CAAC,KAAK,UAAU,eAAe,CAAE,OAA+B,EAAE;IACtE,OAAO,WAAW,CAAC;QACjB,GAAG,IAAI;KACR,CAAC,CAAA;AACJ,CAAC"}

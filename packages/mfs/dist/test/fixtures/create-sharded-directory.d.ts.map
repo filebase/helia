@@ -1,0 +1,1 @@
+{"version":3,"file":"create-sharded-directory.d.ts","sourceRoot":"","sources":["../../../test/fixtures/create-sharded-directory.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,EAAE,UAAU,EAAE,MAAM,sBAAsB,CAAA;AACtD,OAAO,KAAK,EAAE,GAAG,EAAE,MAAM,kBAAkB,CAAA;AAE3C,wBAAsB,sBAAsB,CAAE,UAAU,EAAE,UAAU,EAAE,KAAK,SAAO,GAAG,OAAO,CAAC,GAAG,CAAC,CAoBhG"}

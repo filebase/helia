@@ -48,6 +48,7 @@ export class Bitswap implements BitswapInterface {
 
     // create an event emitter
     init.events = init.events ?? new EventEmitter()
+    this.events = init.events
 
     // report stats to libp2p metrics
     this.stats = new Stats(components)
